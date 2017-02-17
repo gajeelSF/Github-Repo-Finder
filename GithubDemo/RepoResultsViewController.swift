@@ -10,8 +10,10 @@ import UIKit
 import MBProgressHUD
 
 // Main ViewController
-class RepoResultsViewController: UIViewController {
+class RepoResultsViewController: UIViewController, UITableViewDataSource {
 
+    @IBOutlet weak var repoTableView: UITableView!
+    
     var searchBar: UISearchBar!
     var searchSettings = GithubRepoSearchSettings()
 
@@ -43,12 +45,35 @@ class RepoResultsViewController: UIViewController {
             // Print the returned repositories to the output window
             for repo in newRepos {
                 print(repo)
-            }   
+            }
+            self.repos = newRepos
+            self.repoTableView.reloadData()
 
             MBProgressHUD.hide(for: self.view, animated: true)
             }, error: { (error) -> Void in
                 print(error)
         })
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if repos == nil {
+            return 0
+        }
+        return repos.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! GitHubTableViewCell
+        let githubRepo = repos[indexPath.item]
+        cell.nameLabel.text = githubRepo.name!
+        cell.authorLabel.text = githubRepo.ownerHandle!
+        let url = URL(string: githubRepo.ownerAvatarURL!)
+        cell.profileImageView.setImageWith(url!)
+        cell.starLabel.text = "\(githubRepo.stars!)"
+        cell.forkCountLabel.text = "\(githubRepo.forks!)"
+        cell.descriptionLabel.text = githubRepo.repoDescription!
+        
+        return cell
     }
 }
 
