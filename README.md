@@ -8,7 +8,7 @@ Time spent: **X** hours spent in total
 
 The following **required** functionality is completed:
 
-- [x] Table rows for search results should be dynamic height according to the content height.
+- [ ] Table rows for search results should be dynamic height according to the content height.
 - [x] Custom cells should have the proper Auto Layout constraints.
 
 The following **additional** features are implemented:
